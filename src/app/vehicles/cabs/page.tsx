@@ -13,7 +13,7 @@ const TravelCabsPage = () => {
   });
 
   // Handle input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setState({
       ...formData,
@@ -22,7 +22,7 @@ const TravelCabsPage = () => {
   };
 
   // Handle WhatsApp form submission
-  const handleWhatsAppSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleWhatsAppSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Format the message
@@ -311,7 +311,7 @@ const TravelCabsPage = () => {
                     </div>
                     <div className="text-center">
                       <p className="text-blue-200 text-sm">Approx. Fare</p>
-                      <p className="font-semibold">{route.fare}</p>
+                     
                     </div>
                   </div>
                 </div>
