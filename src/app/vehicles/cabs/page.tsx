@@ -13,7 +13,7 @@ const TravelCabsPage = () => {
   });
 
   // Handle input changes
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState({
       ...formData,
@@ -22,7 +22,7 @@ const TravelCabsPage = () => {
   };
 
   // Handle WhatsApp form submission
-  const handleWhatsAppSubmit = (e) => {
+  const handleWhatsAppSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     
     // Format the message
@@ -98,28 +98,28 @@ const TravelCabsPage = () => {
       to: "Cochin Airport",
       distance: "110 km",
       duration: "3.5 hours",
-      fare: "₹2,200 - ₹3,000"
+     
     },
     {
       from: "Munnar",
       to: "Thekkady",
       distance: "92 km",
       duration: "3 hours",
-      fare: "₹1,800 - ₹2,500"
+      
     },
     {
       from: "Munnar",
       to: "Alleppey",
       distance: "175 km",
       duration: "5 hours",
-      fare: "₹3,500 - ₹4,500"
+      
     },
     {
       from: "Munnar",
       to: "Kodaikanal",
       distance: "160 km",
       duration: "4.5 hours",
-      fare: "₹3,200 - ₹4,200"
+    
     }
   ];
 

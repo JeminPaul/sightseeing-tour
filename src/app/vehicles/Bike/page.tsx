@@ -123,7 +123,7 @@ const BikePage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-blue-600">City Bikes Rental</h1>
+        <h1 className="text-3xl font-bold text-blue-600">Dream Drive Rental Bikes</h1>
         <p className="text-gray-600 mt-2">Explore the city on two wheels!</p>
       </header>
 
