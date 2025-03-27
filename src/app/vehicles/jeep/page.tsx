@@ -195,9 +195,9 @@ const JeepSafari: React.FC = () => {
             Contact us to book your jeep safari adventure:
           </p>
           <div className="mb-6 space-y-2">
-            <p className="text-gray-700">📞 Phone: +91 9876543210</p>
+            <p className="text-gray-700">📞 Phone: +91 9947792751</p>
             <p className="text-gray-700">
-              ✉️ Email: booking@keralajeepadventures.com
+              ✉️ Email: dreamdrivecabs@gmail.com
             </p>
           </div>
           <button className="bg-blue-700 hover:bg-blue-800 text-white font-medium py-3 px-6 rounded-md transition-colors duration-300">
