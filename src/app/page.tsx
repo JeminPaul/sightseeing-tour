@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import ReviewSection from "./components/ReviewSection";
+
 
 // Define the VehicleType inline
 type VehicleType = {
@@ -265,9 +267,12 @@ export default function Home() {
                   </button>
                 </a>
               </div>
+           
             </div>
           ))}
         </div>
+        <div className="mt-5">
+        <ReviewSection/> </div>
       </div>
     </main>
   );
