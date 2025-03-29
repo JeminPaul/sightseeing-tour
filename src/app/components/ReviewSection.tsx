@@ -12,10 +12,10 @@ interface Review {
 
 // Props for the ReviewSection component
 interface ReviewSectionProps {
-  googleBusinessUrl: string;
+  googleBusinessUrl?: string; // Make this optional with ?
 }
 
-const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl }) => {
+const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "https://g.page" }) => { // Add default value
   // Sample dummy reviews data
   const dummyReviews: Review[] = [
     {
@@ -286,7 +286,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl }) => {
           onMouseEnter={pauseAutoSlide} 
           onMouseLeave={resumeAutoSlide}
         >
-          {/* Navigation arrows - moved outside the overflow container */}
+          {/* Navigation arrows */}
           <button 
             onClick={() => handleSlideChange('prev')}
             className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 sm:-ml-6 md:-ml-8 bg-white p-2 md:p-3 rounded-full shadow-lg z-20 hover:bg-gray-100 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-indigo-100"
