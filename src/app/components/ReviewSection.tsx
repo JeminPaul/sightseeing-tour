@@ -12,12 +12,18 @@ interface Review {
 
 // Props for the ReviewSection component
 interface ReviewSectionProps {
-  googleBusinessUrl?: string; // Make this optional with ?
+  googleBusinessUrl?: string;
+  initialReviews?: Review[]; // Accept initial reviews from props
+  onAddReview?: (review: Review) => void; // Callback when a review is added
 }
 
-const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "https://g.page" }) => { // Add default value
-  // Sample dummy reviews data
-  const dummyReviews: Review[] = [
+const ReviewSection: React.FC<ReviewSectionProps> = ({ 
+  googleBusinessUrl = "https://g.page",
+  initialReviews = [],
+  onAddReview 
+}) => {
+  // Sample dummy reviews data - use initialReviews if provided, otherwise use defaults
+  const defaultReviews: Review[] = [
     {
       id: 1,
       author: "Sarah Johnson",
@@ -59,6 +65,24 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
       avatar: "/api/placeholder/50/50"
     }
   ];
+
+  // State for reviews
+  const [reviews, setReviews] = useState<Review[]>(initialReviews.length > 0 ? initialReviews : defaultReviews);
+  
+  // Form states for adding new reviews
+  const [showForm, setShowForm] = useState(false);
+  const [newReview, setNewReview] = useState<Omit<Review, 'id' | 'date' | 'avatar'>>({
+    author: '',
+    rating: 5,
+    comment: ''
+  });
+  
+  // Update reviews if initialReviews prop changes
+  useEffect(() => {
+    if (initialReviews.length > 0) {
+      setReviews(initialReviews);
+    }
+  }, [initialReviews]);
 
   // State for tracking animation and slides
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -115,17 +139,17 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
     }
   };
 
-  // Update visible reviews when reviewsPerView or currentIndex changes
+  // Update visible reviews when reviewsPerView, currentIndex, or reviews changes
   useEffect(() => {
     updateVisibleReviews(currentIndex);
-  }, [reviewsPerView, currentIndex]);
+  }, [reviewsPerView, currentIndex, reviews]);
 
   // Update visible reviews based on current index
   const updateVisibleReviews = (index: number) => {
     const visibleItems: Review[] = [];
     for (let i = 0; i < reviewsPerView; i++) {
-      const reviewIndex = (index + i) % dummyReviews.length;
-      visibleItems.push(dummyReviews[reviewIndex]);
+      const reviewIndex = (index + i) % reviews.length;
+      visibleItems.push(reviews[reviewIndex]);
     }
     setVisibleReviews(visibleItems);
   };
@@ -160,9 +184,9 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
   const getNextIndex = (direction: 'next' | 'prev') => {
     if (direction === 'next') {
       // Make sure we don't skip any reviews by calculating modulo with respect to reviewsPerView
-      return (currentIndex + 1) % dummyReviews.length;
+      return (currentIndex + 1) % reviews.length;
     } else {
-      return (currentIndex - 1 + dummyReviews.length) % dummyReviews.length;
+      return (currentIndex - 1 + reviews.length) % reviews.length;
     }
   };
 
@@ -218,6 +242,61 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
     }, animationDuration);
   };
 
+  // Handle adding a new review
+  const handleAddReview = () => {
+    // Generate a new ID (in a real app, this would be handled by the backend)
+    const newId = reviews.length > 0 ? Math.max(...reviews.map(r => r.id)) + 1 : 1;
+    
+    // Get current date
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-US', { 
+      month: 'long', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+    
+    // Create the new review
+    const reviewToAdd: Review = {
+      id: newId,
+      author: newReview.author,
+      rating: newReview.rating,
+      comment: newReview.comment,
+      date: formattedDate,
+      avatar: "/api/placeholder/50/50" // Default placeholder
+    };
+    
+    // Add to reviews array
+    const updatedReviews = [...reviews, reviewToAdd];
+    setReviews(updatedReviews);
+    
+    // Call the callback if provided
+    if (onAddReview) {
+      onAddReview(reviewToAdd);
+    }
+    
+    // Reset form
+    setNewReview({
+      author: '',
+      rating: 5,
+      comment: ''
+    });
+    
+    // Hide form
+    setShowForm(false);
+    
+    // Reset carousel
+    handleResize();
+  };
+
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewReview(prev => ({
+      ...prev,
+      [name]: name === 'rating' ? parseInt(value, 10) : value
+    }));
+  };
+
   // Render star ratings
   const renderStars = (rating: number) => {
     const stars = [];
@@ -229,6 +308,32 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
       );
     }
     return stars;
+  };
+
+  // Render star rating input
+  const renderStarInput = () => {
+    return (
+      <div className="flex items-center mb-4">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <label key={star} className="cursor-pointer mx-1">
+            <input
+              type="radio"
+              name="rating"
+              value={star}
+              checked={newReview.rating === star}
+              onChange={handleInputChange}
+              className="sr-only"
+            />
+            <span 
+              className={`text-2xl ${newReview.rating >= star ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-300`}
+              title={`${star} star`}
+            >
+              ★
+            </span>
+          </label>
+        ))}
+      </div>
+    );
   };
 
   // Get animation classes based on current state
@@ -266,6 +371,16 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
         
         {/* Buttons container */}
         <div className="flex justify-center gap-4 mb-10">
+          <button 
+            onClick={() => setShowForm(!showForm)}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" fillRule="evenodd"></path>
+            </svg>
+            {showForm ? 'Cancel' : 'Add Review'}
+          </button>
+          
           <a 
             href={`${googleBusinessUrl}/review`}
             target="_blank"
@@ -275,9 +390,61 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
             </svg>
-            Write a Review
+            Write a Review on Google
           </a>
         </div>
+        
+        {/* Add Review Form */}
+        {showForm && (
+          <div className="max-w-lg mx-auto mb-12 bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
+            <h3 className="text-xl font-bold mb-4 text-indigo-700">Add Your Review</h3>
+            <div className="mb-4">
+              <label htmlFor="author" className="block text-gray-700 mb-2">Your Name</label>
+              <input
+                type="text"
+                id="author"
+                name="author"
+                value={newReview.author}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+            
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Your Rating</label>
+              {renderStarInput()}
+            </div>
+            
+            <div className="mb-6">
+              <label htmlFor="comment" className="block text-gray-700 mb-2">Your Comment</label>
+              <textarea
+                id="comment"
+                name="comment"
+                value={newReview.comment}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-24"
+                placeholder="Share your experience..."
+                required
+              ></textarea>
+            </div>
+            
+            <div className="flex justify-end">
+              <button
+                onClick={handleAddReview}
+                disabled={!newReview.author || !newReview.comment}
+                className={`px-6 py-2 rounded-lg ${
+                  !newReview.author || !newReview.comment
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700'
+                } font-medium transition-all duration-300`}
+              >
+                Submit Review
+              </button>
+            </div>
+          </div>
+        )}
         
         <div 
           className="relative mx-auto"
@@ -360,8 +527,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
         
         {/* Indicator dots */}
         <div className="flex justify-center mt-8">
-          {Array.from({ length: Math.ceil(dummyReviews.length / reviewsPerView) }).map((_, groupIndex) => {
-            const indexToCheck = groupIndex * reviewsPerView % dummyReviews.length;
+          {Array.from({ length: Math.ceil(reviews.length / reviewsPerView) }).map((_, groupIndex) => {
+            const indexToCheck = groupIndex * reviewsPerView % reviews.length;
             return (
               <button
                 key={groupIndex}
@@ -397,7 +564,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ googleBusinessUrl = "http
         {/* Review count indicator with animation */}
         <div className="text-center mt-6 text-gray-600">
           <p className="inline-block px-4 py-1 bg-white rounded-full shadow-sm border border-indigo-100">
-            Showing {visibleReviews.length} of {dummyReviews.length} reviews
+            Showing {visibleReviews.length} of {reviews.length} reviews
           </p>
         </div>
       </div>
