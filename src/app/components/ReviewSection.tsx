@@ -18,7 +18,7 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ 
-  googleBusinessUrl = "https://g.page/r/CVCYNWDoh_hWEBM/review",  // Updated with your Google review link
+  googleBusinessUrl = "https://www.google.com/maps/place/Dreamdrive+Cabs+Services/@10.0217597,77.0347465,17z/data=!4m8!3m7!1s0x3b079980bd20942f:0x56f887e860359850!8m2!3d10.0217597!4d77.0347465!9m1!1b1!16s%2Fg%2F11m7425njs?entry=ttu&g_ep=EgoyMDI1MDMzMS4wIKXMDSoASAFQAw%3D%3D",  // Updated with your Google review link
   initialReviews = [],
   onAddReview 
 }) => {
@@ -536,10 +536,10 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
           })}
         </div>
         
-        {/* See All Reviews button - MODIFIED HERE */}
+        {/* See All Reviews button - UPDATED with your Google Maps link */}
         <div className="text-center mt-12">
           <a 
-            href={googleBusinessUrl}  // Updated with your Google review link
+            href={googleBusinessUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
