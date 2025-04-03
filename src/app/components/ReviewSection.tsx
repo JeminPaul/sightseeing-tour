@@ -18,7 +18,7 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ 
-  googleBusinessUrl = "https://g.page",
+  googleBusinessUrl = "https://g.page/r/CVCYNWDoh_hWEBM/review",  // Updated with your Google review link
   initialReviews = [],
   onAddReview 
 }) => {
@@ -69,7 +69,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   // State for reviews
   const [reviews, setReviews] = useState<Review[]>(initialReviews.length > 0 ? initialReviews : defaultReviews);
   
-  // Form states for adding new reviews
+  // Form states for adding new reviews - keeping this but we won't show the form UI
   const [showForm, setShowForm] = useState(false);
   const [newReview, setNewReview] = useState<Omit<Review, 'id' | 'date' | 'avatar'>>({
     author: '',
@@ -242,7 +242,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
     }, animationDuration);
   };
 
-  // Handle adding a new review
+  // Handle adding a new review - keeping function but we won't use the UI
   const handleAddReview = () => {
     // Generate a new ID (in a real app, this would be handled by the backend)
     const newId = reviews.length > 0 ? Math.max(...reviews.map(r => r.id)) + 1 : 1;
@@ -369,20 +369,10 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
           </p>
         </div>
         
-        {/* Buttons container */}
+        {/* Write a Review button - modified to only show Google Business link */}
         <div className="flex justify-center gap-4 mb-10">
-          <button 
-            onClick={() => setShowForm(!showForm)}
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-          >
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" fillRule="evenodd"></path>
-            </svg>
-            {showForm ? 'Cancel' : 'Add Review'}
-          </button>
-          
           <a 
-            href={`${googleBusinessUrl}/review`}
+            href={googleBusinessUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg shadow-md hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
@@ -394,7 +384,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
           </a>
         </div>
         
-        {/* Add Review Form */}
+        {/* Add Review Form - keeping but it's hidden */}
         {showForm && (
           <div className="max-w-lg mx-auto mb-12 bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
             <h3 className="text-xl font-bold mb-4 text-indigo-700">Add Your Review</h3>
@@ -546,10 +536,10 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
           })}
         </div>
         
-        {/* Show More button */}
+        {/* See All Reviews button - MODIFIED HERE */}
         <div className="text-center mt-12">
           <a 
-            href={googleBusinessUrl}
+            href={googleBusinessUrl}  // Updated with your Google review link
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
