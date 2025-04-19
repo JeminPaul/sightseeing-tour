@@ -18,7 +18,7 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ 
-  googleBusinessUrl = "https://www.google.com/maps/place/Dreamdrive+Cabs+Services/@10.0217597,77.0347465,17z/data=!4m8!3m7!1s0x3b079980bd20942f:0x56f887e860359850!8m2!3d10.0217597!4d77.0347465!9m1!1b1!16s%2Fg%2F11m7425njs?entry=ttu&g_ep=EgoyMDI1MDMzMS4wIKXMDSoASAFQAw%3D%3D",  // Updated with your Google review link
+  googleBusinessUrl = "https://g.page/r/CV3IUQFAUDH2EBM/review",  // Updated with your Google review link
   initialReviews = [],
   onAddReview 
 }) => {
