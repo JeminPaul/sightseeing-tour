@@ -18,7 +18,7 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ 
-  googleBusinessUrl = "https://g.page/r/CVU8X-0iknfYEAE/review",  // Updated with your Google review link
+  googleBusinessUrl = "https://g.page/r/Ca6y7hhyxY1uEAE/review",  // Updated with your Google review link
   initialReviews = [],
   onAddReview 
 }) => {
